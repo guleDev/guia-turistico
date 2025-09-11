@@ -1,0 +1,1 @@
+O desenvolvimento do aplicativo foi realizado em sala de aula com React Native, contando com o auxílio e orientação do professor [Sidney Silva](https://github.com/sidfast), o que possibilitou a aplicação prática dos conteúdos estudados.
