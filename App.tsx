@@ -1,8 +1,5 @@
-import ListaPontosTuristicos from "@screens/ListaPontosTuristicos";
+import Routes from "@data/routes";
 
 export default function App() {
-  return (<>
-  <ListaPontosTuristicos />
-  </>
-  )
+  return <Routes />
 }

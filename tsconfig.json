@@ -4,7 +4,7 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./app/*"],
+      "@/*": ["./*"],
       "@data/*": ["./data/*"],
       "@screens/*":["./screens/*"],
       "@types": ["./data/types.ts"],
