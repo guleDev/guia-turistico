@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Text, ActivityIndicator, FlatList, View } from "react-native";
 
 import api from "@services/api";
-import { ApiResponseItem, DadosAdaptados } from "@data/types";
+import { ApiResponseItem, DadosAdaptados } from "@/types/types";
 
 import { useNavigation } from "@react-navigation/native";
 

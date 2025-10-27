@@ -3,8 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
 // Suas telas
-import { ListaPontosTuristicos } from '@screens/screens';
-import FavoritosScreen from '@/screens/Favoritos';
+import { ListaPontosTuristicos, Favoritos, Mapa} from '@/screens';
 
 const Tab = createBottomTabNavigator();
 
@@ -33,7 +32,8 @@ export default function Tabs() {
       })}
     >
       <Tab.Screen name="Pontos" component={ListaPontosTuristicos} />
-      <Tab.Screen name="Favoritos" component={FavoritosScreen} />
+      <Tab.Screen name="Favoritos" component={Favoritos} />
+      <Tab.Screen name="Mapa" component={Mapa} />
     </Tab.Navigator>
   );
 }

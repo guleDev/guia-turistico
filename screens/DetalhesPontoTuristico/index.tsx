@@ -18,7 +18,7 @@ import {
   DetalhesPontoTuristicoNavigationProp,
   ApiResponseItem,
   PontoDetalhesProp,
-} from '@types';
+} from '@/types/types';
 import Button from '@/components/Button';
 
 const DetalhesPontoTuristico: React.FC = () => {

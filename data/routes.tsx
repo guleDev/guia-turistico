@@ -1,15 +1,25 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { JSX } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { DetalhesPontoTuristico } from '@screens/screens';
 import Tabs from '@data/tabs';
+import { DetalhesPontoTuristico } from '@/screens';
 import { FavoritesProvider } from '@/context/FavoritesContext';
+import { PontoDetalhesProp } from '@/types/types';
 
-const Stack = createStackNavigator();
+// Tipagem das rotas do Stack
+export type RootStackParamList = {
+  Tabs: undefined;
+  DetalhesPontosTuristicos: { pontoDetalhes?: PontoDetalhesProp };
+};
 
-export default function Routes() {
+const Stack = createStackNavigator<RootStackParamList>();
+
+export default function Routes(): JSX
+
+
+.Element {
   return (
     <FavoritesProvider>
       <NavigationContainer>

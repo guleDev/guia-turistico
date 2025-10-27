@@ -7,9 +7,10 @@
       "@/*": ["./*"],
       "@data/*": ["./data/*"],
       "@screens/*":["./screens/*"],
-      "@types": ["./data/types.ts"],
+      "@types": ["types/types.ts"],
       "@components/*": ["./components/*"],
-      "@services/*": ["./services/*"]
+      "@services/*": ["./services/*"],
+      "@context/*": ["./context/*"]
     }
   }
 }

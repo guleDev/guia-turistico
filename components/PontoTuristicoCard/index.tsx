@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
 
-import { PontoTuristicoCardProps, RootStackParamList } from '@types';
+import { PontoTuristicoCardProps, RootStackParamList } from '@/types/types';
 import { styles } from './PontoTuristicoCard.style';
 import Button from '@components/Button';
 

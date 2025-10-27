@@ -1,23 +1,28 @@
-import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  ReactNode,
+} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FavoritesContextType, FavoritesProviderProps } from '@types'
+import { FavoritesContextData } from '@types';
 
-const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
+const FavoritesContext = createContext<FavoritesContextData | undefined>(undefined);
 
 const FAVORITES_KEY = '@GuiaTuristico:favorites';
 
-export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }) => {
+export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
-  const [isLoadingFavorites, setIsLoadingFavorites] = useState<boolean>(true);
+  const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
 
   const loadFavorites = useCallback(async () => {
     try {
-      const storedFavorites = await AsyncStorage.getItem(FAVORITES_KEY);
-      if (storedFavorites !== null) {
-        setFavoriteIds(JSON.parse(storedFavorites));
-      }
+      const stored = await AsyncStorage.getItem(FAVORITES_KEY);
+      if (stored) setFavoriteIds(JSON.parse(stored));
     } catch (error) {
-      console.error("Erro ao carregar favoritos do AsyncStorage:", error);
+      console.error('Erro ao carregar favoritos:', error);
     } finally {
       setIsLoadingFavorites(false);
     }
@@ -27,7 +32,7 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
     try {
       await AsyncStorage.setItem(FAVORITES_KEY, JSON.stringify(ids));
     } catch (error) {
-      console.error("Erro ao salvar favoritos no AsyncStorage:", error);
+      console.error('Erro ao salvar favoritos:', error);
     }
   }, []);
 
@@ -42,10 +47,8 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
   }, [favoriteIds, isLoadingFavorites, saveFavorites]);
 
   const toggleFavorite = (pontoId: string) => {
-    setFavoriteIds(prevIds =>
-      prevIds.includes(pontoId)
-        ? prevIds.filter(id => id !== pontoId)
-        : [...prevIds, pontoId]
+    setFavoriteIds((prev) =>
+      prev.includes(pontoId) ? prev.filter((id) => id !== pontoId) : [...prev, pontoId]
     );
   };
 
@@ -54,24 +57,19 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
     [favoriteIds]
   );
 
-  const contextValue: FavoritesContextType = {
-    favoriteIds,
-    isLoadingFavorites,
-    toggleFavorite,
-    isFavorite,
-  };
-
   return (
-    <FavoritesContext.Provider value={contextValue}>
+    <FavoritesContext.Provider
+      value={{ favoriteIds, isLoadingFavorites, toggleFavorite, isFavorite }}
+    >
       {children}
     </FavoritesContext.Provider>
   );
 };
 
-export const useFavorites = (): FavoritesContextType => {
+export const useFavorites = (): FavoritesContextData => {
   const context = useContext(FavoritesContext);
   if (!context) {
-    throw new Error("useFavorites deve ser usado dentro de um FavoritesProvider");
+    throw new Error('useFavorites deve ser usado dentro de FavoritesProvider');
   }
   return context;
 };

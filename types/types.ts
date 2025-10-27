@@ -45,7 +45,7 @@ interface RootStackParamList extends ParamListBase {
     Detalhes: { id: string };
 }
 
-interface FavoritesContextType {
+interface FavoritesContextData {
     favoriteIds: string[];
     isLoadingFavorites: boolean;
     toggleFavorite: (pontoId: string) => void;
@@ -60,9 +60,11 @@ interface PontoDetalhesProp {
     id: string;
     nome: string;
     descricao: string;
-    detalhesCompletos: string;
     imagem?: string;
+    detalhesCompletos?: string;
+    latitude?: number;
+    longitude?: number;
 }
 
 export { DetalhesPontoTuristicoNavigationProp } // types
-export { PontoTuristicoCardProps, PontoTuristicoDetalhesProps, ButtonProps, DadosAdaptados, ApiResponseItem, RootStackParamList, FavoritesContextType, FavoritesProviderProps, PontoDetalhesProp } // interfaces
+export { PontoTuristicoCardProps, PontoTuristicoDetalhesProps, ButtonProps, DadosAdaptados, ApiResponseItem, RootStackParamList, FavoritesContextData, FavoritesProviderProps, PontoDetalhesProp } // interfaces
