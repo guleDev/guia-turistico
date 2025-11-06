@@ -40,4 +40,22 @@ export const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 24,
   },
+  addButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#e6f2ff",
+    padding: 10,
+    marginHorizontal: 20,
+    marginBottom: 15,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#007bff",
+  },
+  addButtonText: {
+    marginLeft: 10,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#007bff",
+  },  
 });

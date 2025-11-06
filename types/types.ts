@@ -4,22 +4,17 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type DetalhesPontoTuristicoNavigationProp = NativeStackNavigationProp<any>;
 
-interface PontoTuristicoCardProps {
-    id: string
-    nome: string
-    descricao: string
-    imagem: string
-}
-
-interface PontoTuristicoDetalhesProps {
+interface PontoDetalhesProp {
     id: string;
     nome: string;
     descricao: string;
-    imagem: string;
-    localizacao?: string;
+    imagem?: string;
     horarioFuncionamento?: string;
+    detalhesCompletos?: string;
+    localizacao?: string;
+    latitude?: number;
+    longitude?: number;
 }
-
 
 interface ButtonProps {
     children: React.ReactNode
@@ -31,7 +26,6 @@ interface DadosAdaptados {
     nome: string
     descricao: string
     imagem: string
-
 }
 
 interface ApiResponseItem {
@@ -56,15 +50,11 @@ interface FavoritesProviderProps {
     children: React.ReactNode;
 }
 
-interface PontoDetalhesProp {
-    id: string;
-    nome: string;
-    descricao: string;
-    imagem?: string;
-    detalhesCompletos?: string;
-    latitude?: number;
-    longitude?: number;
+interface PostData {
+  title: string;
+  body: string;
+  userId?: number;
 }
 
 export { DetalhesPontoTuristicoNavigationProp } // types
-export { PontoTuristicoCardProps, PontoTuristicoDetalhesProps, ButtonProps, DadosAdaptados, ApiResponseItem, RootStackParamList, FavoritesContextData, FavoritesProviderProps, PontoDetalhesProp } // interfaces
+export { ButtonProps, DadosAdaptados, ApiResponseItem, RootStackParamList, FavoritesContextData, FavoritesProviderProps, PontoDetalhesProp, PostData } // interfaces

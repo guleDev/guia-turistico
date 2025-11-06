@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, ActivityIndicator, FlatList, View } from "react-native";
+import { Text, ActivityIndicator, FlatList, View, TouchableOpacity } from "react-native";
 
 import api from "@services/api";
 import { ApiResponseItem, DadosAdaptados } from "@/types/types";
@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import PontoTuristicoCard from "@components/PontoTuristicoCard";
 
 import { styles } from "./ListaPontosTuristicos.style";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ListaPontosTuristicos() {
     const [pontosTuristicos, setPontosTuristicos] = useState<DadosAdaptados[]>([]);
@@ -61,6 +62,13 @@ export default function ListaPontosTuristicos() {
     return (
         <View style={styles.container} >
             <Text style={styles.mainTitle}>Pontos Turísticos</Text>
+            <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => navigation.navigate("GerenciarPonto", {})}
+            >
+                <Ionicons name="add-circle" size={30} color="#007bff" />
+                <Text style={styles.addButtonText}>Adicionar Novo Ponto</Text>
+            </TouchableOpacity>
             < FlatList // <-- Usando FlatList para exibir a lista
                 data={pontosTuristicos}
                 keyExtractor={(item: DadosAdaptados) => item.id}

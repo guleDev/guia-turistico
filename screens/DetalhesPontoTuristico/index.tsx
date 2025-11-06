@@ -1,119 +1,111 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  ScrollView,
-  TouchableOpacity,
-  ActivityIndicator,
+  StyleSheet,
   Image,
-} from 'react-native';
-import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
-import { useFavorites } from '@/context/FavoritesContext';
-import api from '@/services/api';
-import { styles } from './DetalhesPontoTuristico.style';
+  ScrollView,
+  Button,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import { useRoute, useNavigation, RouteProp } from "@react-navigation/native";
+import { deletePost } from "@services/api";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-// Types
-import {
-  DetalhesPontoTuristicoNavigationProp,
-  ApiResponseItem,
-  PontoDetalhesProp,
-} from '@/types/types';
-import Button from '@/components/Button';
+interface PontoDetalhes {
+  id: string;
+  nome: string;
+  descricao: string;
+  imagem: string;
+  detalhesCompletos: string;
+}
 
-const DetalhesPontoTuristico: React.FC = () => {
-  const route = useRoute<RouteProp<{ params: PontoDetalhesProp }, 'params'>>();
-  const navigation = useNavigation<DetalhesPontoTuristicoNavigationProp>();
-  const { isFavorite, toggleFavorite } = useFavorites();
+type RootStackParamList = {
+  DetalhesPonto: { pontoDetalhes: PontoDetalhes };
+  GerenciarPonto: { pontoDetalhes?: PontoDetalhes };
+};
 
-  const { id } = route.params;
+type DetalhesRouteProp = RouteProp<RootStackParamList, "DetalhesPonto">;
+type DetalhesNavProp = NativeStackNavigationProp<RootStackParamList, "DetalhesPonto">;
 
-  const [detalhes, setDetalhes] = useState<PontoDetalhesProp | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default function DetalhesPontoTuristico() {
+  const route = useRoute<DetalhesRouteProp>();
+  const navigation = useNavigation<DetalhesNavProp>();
+  const { pontoDetalhes } = route.params;
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchDetalhes = async () => {
-      try {
-        const response = await api.get<ApiResponseItem>(`/posts/${id}`);
-        const item = response.data;
+    navigation.setOptions({ title: pontoDetalhes.nome });
+  }, [pontoDetalhes.nome, navigation]);
 
-        const dadosAdaptados: PontoDetalhesProp = {
-          id: String(item.id),
-          nome: item.title,
-          descricao: item.body,
-          detalhesCompletos: `Mais informações sobre o ponto turístico "${item.title}".`,
-          imagem: `https://picsum.photos/id/${item.id % 100}/600/400`, // imagem maior
-        };
-
-        setDetalhes(dadosAdaptados);
-      } catch (err) {
-        console.error('Erro ao buscar detalhes:', err);
-        setError('Não foi possível carregar os detalhes do ponto turístico.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchDetalhes();
-  }, [id]);
-
-  const handleToggleFavorite = () => {
-    toggleFavorite(id);
+  const handleDelete = async () => {
+    Alert.alert(
+      "Confirmar Exclusão",
+      `Deseja excluir "${pontoDetalhes.nome}"?`,
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          onPress: async () => {
+            setIsLoading(true);
+            try {
+              await deletePost(pontoDetalhes.id);
+              Alert.alert("Sucesso", "Ponto excluído com sucesso!");
+              navigation.goBack();
+            } catch (error) {
+              Alert.alert("Erro", "Falha ao excluir o ponto.");
+            } finally {
+              setIsLoading(false);
+            }
+          },
+        },
+      ]
+    );
   };
 
-  const favoriteIconName = isFavorite(id) ? 'heart' : 'heart-outline';
-  const favoriteIconColor = isFavorite(id) ? 'red' : 'gray';
-
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#333" />
-        <Text>Carregando detalhes...</Text>
-      </View>
-    );
-  }
-
-  if (error || !detalhes) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>{error || 'Detalhes não encontrados.'}</Text>
-        <Button action={() => navigation.goBack()}>Voltar</Button>
-      </View>
-    );
-  }
-
   return (
-    <ScrollView style={styles.scrollViewContainer} contentContainerStyle={{ paddingBottom: 30 }}>
-      <View style={styles.contentContainer}>
-        {/* Cabeçalho */}
-        <View style={styles.header}>
-          <Text style={styles.title}>{detalhes.nome}</Text>
-          <TouchableOpacity onPress={handleToggleFavorite} style={styles.favoriteButton}>
-            <Ionicons name={favoriteIconName} size={30} color={favoriteIconColor} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Imagem */}
-        {detalhes.imagem && (
-          <Image
-            source={{ uri: detalhes.imagem }}
-            style={styles.imagem}
-            resizeMode="cover"
-          />
-        )}
-
-        {/* Conteúdo */}
-        <Text style={styles.detailText}>ID: {detalhes.id}</Text>
-        <Text style={styles.descriptionText}>{detalhes.descricao}</Text>
-        <Text style={styles.extraDetails}>{detalhes.detalhesCompletos}</Text>
+    <ScrollView style={styles.container}>
+      <Image source={{ uri: pontoDetalhes.imagem }} style={styles.imagem} />
+      <View style={styles.content}>
+        <Text style={styles.titulo}>{pontoDetalhes.nome}</Text>
+        <Text style={styles.descricao}>{pontoDetalhes.detalhesCompletos}</Text>
 
         <View style={styles.buttonContainer}>
-        <Button action={() => navigation.goBack()}>Voltar para a lista</Button>
+          <Button
+            title="Editar Ponto"
+            onPress={() => navigation.navigate("GerenciarPonto", { pontoDetalhes })}
+            color="#007bff"
+            disabled={isLoading}
+          />
+          <View style={{ width: 10 }} />
+          <Button
+            title="Excluir Ponto"
+            onPress={handleDelete}
+            color="#dc3545"
+            disabled={isLoading}
+          />
         </View>
+
+        {isLoading && (
+          <ActivityIndicator size="large" color="#0000ff" style={styles.loadingIndicator} />
+        )}
       </View>
     </ScrollView>
   );
-};
+}
 
-export default DetalhesPontoTuristico;
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: "#f5f5f5" },
+  imagem: { width: "100%", height: 250, resizeMode: "cover" },
+  content: { padding: 20 },
+  titulo: { fontSize: 26, fontWeight: "bold", marginBottom: 10, color: "#333" },
+  descricao: { fontSize: 16, lineHeight: 24, color: "#555" },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 30,
+    marginBottom: 20,
+  },
+  loadingIndicator: { marginTop: 20 },
+});
